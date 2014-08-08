@@ -10,6 +10,7 @@ require.config({
     'jasmine-jquery': 'lib/jasmine-jquery/lib/jasmine-jquery',
     'event-emitter': 'lib/event-emitter/src/event-emitter',
     inherits: 'lib/inherits/inherits',
+    mout: 'lib/mout/src',
     json: 'lib/requirejs-plugins/src/json',
     debug: 'lib/debug/debug',
     rework: 'lib/rework/rework',

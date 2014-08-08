@@ -12,7 +12,7 @@ exports.value = packageAttributeValue;
  */
 exports.decorate = function (el) {
     var currentVal = (el.getAttribute(packageAttribute) || '').trim();
-    var currentPackageAttrs = currentVal.split(' ');
+    var currentPackageAttrs = currentVal.length ? currentVal.split(' ') : [];
     var newVal;
     // Add this package attribute value if it's not already there
     if (currentPackageAttrs.indexOf(packageAttributeValue) === -1) {
