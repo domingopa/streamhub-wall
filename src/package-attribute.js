@@ -1,5 +1,6 @@
 var packageJson = require('json!streamhub-wall/../package.json');
 var packageAttribute = 'data-lf-package';
+var bind = require('mout/function/bind');
 var packageAttributeValue = packageName(packageJson);
 
 exports.attribute = packageAttribute;
@@ -37,8 +38,8 @@ exports.undecorate = function (el) {
  * the attribute is removed
  */
 exports.decorateModal = function modalWithPackageSelector(modal) {
-    modal.$el.on('showing', setHasPackageAttribute.bind({}, modal, true));
-    modal.$el.on('hiding', setHasPackageAttribute.bind({}, modal, false));
+    modal.$el.on('showing', bind(setHasPackageAttribute, {}, [modal, true]));
+    modal.$el.on('hiding', bind(setHasPackageAttribute, {}, [modal, false]));
     return modal;
 };
 

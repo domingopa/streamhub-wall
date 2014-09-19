@@ -7,6 +7,7 @@ var UploadButton = require('streamhub-input').UploadButton;
 var packageAttribute = require('./package-attribute');
 var ModalView = require('streamhub-sdk/modal');
 var postButtons = require('streamhub-wall/post-buttons');
+var bind = require('mout/function/bind');
 
 /**
  * Header of LiveMediaWall.
@@ -41,7 +42,7 @@ WallHeaderView.prototype.render = function () {
     if (postCommand.canExecute()) {
         renderPostButtonIfCollection.call(this, true);
     } else {
-        postCommand.on('change:canExecute', renderPostButtonIfCollection.bind(this));
+        postCommand.on('change:canExecute', bind(renderPostButtonIfCollection, this));
     }
     this._rendered = true;
     function renderPostButtonIfCollection(showPostButton) {
