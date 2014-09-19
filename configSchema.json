@@ -1,0 +1,195 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {
+    "livefyre-collection": {
+      "title": "Livefyre Collection",
+      "description": "Indicates a specific Collection resource in Livefyre's Content Cloud",
+      "format": "urn:livefyre:json-schema:formats:collection",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "network": {
+          "type": "string",
+          "default": "livefyre.com"
+        },
+        "siteId": {
+          "type": "string",
+          "default": "313878"
+        },
+        "articleId": {
+          "type": "string",
+          "default": "1"
+        },
+        "environment": {
+          "type": "string",
+          "default": "livefyre.com"
+        }
+      },
+      "required": [
+        "network",
+        "siteId",
+        "articleId"
+      ]
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "collection": {
+      "title": "Collection",
+      "format": "urn:livefyre:json-schema:formats:collection",
+      "description": "The Livefyre Collection to display the contents of",
+      "oneOf": [{ "$ref": "#/definitions/livefyre-collection" }]
+    },
+    "modal": {
+      "id": "http://jsonschema.net/modal#",
+      "type": "boolean",
+      "default": true,
+      "additionalProperties": false
+    },
+    "initial": {
+      "id": "http://jsonschema.net/initial#",
+      "type": "integer",
+      "default": 50,
+      "additionalProperties": false
+    },
+    "cardBackgroundColor": {
+      "id": "http://jsonschema.net/cardBackgroundColor#",
+      "type": "string",
+      "default": "#333",
+      "additionalProperties": false
+    },
+    "textColor": {
+      "id": "http://jsonschema.net/textColor#",
+      "type": "string",
+      "default": "magenta",
+      "additionalProperties": false
+    },
+    "linkColor": {
+      "id": "http://jsonschema.net/linkColor#",
+      "type": "string",
+      "default": "orange",
+      "additionalProperties": false
+    },
+    "footerTextColor": {
+      "id": "http://jsonschema.net/footerTextColor#",
+      "type": "string",
+      "default": "lime",
+      "additionalProperties": false
+    },
+    "displayNameColor": {
+      "id": "http://jsonschema.net/displayNameColor#",
+      "type": "string",
+      "default": "cyan",
+      "additionalProperties": false
+    },
+    "usernameColor": {
+      "id": "http://jsonschema.net/usernameColor#",
+      "type": "string",
+      "default": "red",
+      "additionalProperties": false
+    },
+    "fontFamily": {
+      "id": "http://jsonschema.net/fontFamily#",
+      "type": "string",
+      "default": "Helvetica, Arial",
+      "additionalProperties": false
+    },
+    "linkAttachmentTextColor": {
+      "id": "http://jsonschema.net/linkAttachmentTextColor#",
+      "type": "string",
+      "default": "#888",
+      "additionalProperties": false
+    },
+    "linkAttachmentBackgroundColor": {
+      "id": "http://jsonschema.net/linkAttachmentBackgroundColor#",
+      "type": "string",
+      "default": "#555",
+      "additionalProperties": false
+    },
+    "linkAttachmentBorderColor": {
+      "id": "http://jsonschema.net/linkAttachmentBorderColor#",
+      "type": "string",
+      "default": "#888",
+      "additionalProperties": false
+    },
+    "sourceLogoColor": {
+      "id": "http://jsonschema.net/sourceLogoColor#",
+      "type": "string",
+      "default": "#888",
+      "additionalProperties": false
+    },
+    "buttonTextColor": {
+      "id": "http://jsonschema.net/buttonTextColor#",
+      "type": "string",
+      "default": "#888",
+      "additionalProperties": false
+    },
+    "buttonHoverBackgroundColor": {
+      "id": "http://jsonschema.net/buttonHoverBackgroundColor#",
+      "type": "string",
+      "default": "#888",
+      "additionalProperties": false
+    },
+    "buttonActiveBackgroundColor": {
+      "id": "http://jsonschema.net/buttonActiveBackgroundColor#",
+      "type": "string",
+      "default": "#888",
+      "additionalProperties": false
+    },
+    "buttonBorderColor": {
+      "id": "http://jsonschema.net/buttonBorderColor#",
+      "type": "string",
+      "default": "#888",
+      "additionalProperties": false
+    },
+    "bodyFontSize": {
+      "id": "http://jsonschema.net/bodyFontSize#",
+      "type": "string",
+      "default": "12px",
+      "additionalProperties": false
+    },
+    "bodyLineHeight": {
+      "id": "http://jsonschema.net/bodyLineHeight#",
+      "type": "string",
+      "default": "12px",
+      "additionalProperties": false
+    },
+    "titleFontSize": {
+      "id": "http://jsonschema.net/titleFontSize#",
+      "type": "string",
+      "default": "12px",
+      "additionalProperties": false
+    },
+    "titleLineHeight": {
+      "id": "http://jsonschema.net/titleLineHeight#",
+      "type": "string",
+      "default": "12px",
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "collection",
+    "modal",
+    "initial",
+    "cardBackgroundColor",
+    "textColor",
+    "linkColor",
+    "footerTextColor",
+    "displayNameColor",
+    "usernameColor",
+    "fontFamily",
+    "linkAttachmentTextColor",
+    "linkAttachmentBackgroundColor",
+    "linkAttachmentBorderColor",
+    "sourceLogoColor",
+    "buttonTextColor",
+    "buttonHoverBackgroundColor",
+    "buttonActiveBackgroundColor",
+    "buttonBorderColor",
+    "bodyFontSize",
+    "bodyLineHeight",
+    "titleFontSize",
+    "titleLineHeight"
+  ]
+}
