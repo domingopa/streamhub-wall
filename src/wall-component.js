@@ -7,6 +7,7 @@ var wallComponentStyles = require('less!streamhub-wall/styles/wall-component');
 var Passthrough = require('stream/passthrough');
 var PostContentButton = require('streamhub-input/javascript/content-editor/button');
 var packageAttribute = require('./package-attribute');
+var forEach = require('mout/array/forEach');
 
 /**
  * LiveMediaWall Component
@@ -97,7 +98,7 @@ WallComponent.prototype.render = function () {
     $(container).addClass('streamhub-wall-component');
     var frag = document.createDocumentFragment();
 
-    subviews.forEach(function (view) {
+    forEach(subviews, function (view) {
         container.appendChild(view.el);
     });
 
@@ -105,10 +106,10 @@ WallComponent.prototype.render = function () {
     el.appendChild(frag);
 
     // then render them
-    subviews.forEach(function (view) {
+    forEach(subviews, function (view) {
         view.render();
     });
-
+    
     return el;
 };
 
