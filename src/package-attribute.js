@@ -1,6 +1,7 @@
 var packageJson = require('json!streamhub-wall/../package.json');
 var packageAttribute = 'data-lf-package';
 var bind = require('mout/function/bind');
+var trim = require('mout/string/trim');
 var packageAttributeValue = packageName(packageJson);
 
 exports.attribute = packageAttribute;
@@ -12,7 +13,7 @@ exports.value = packageAttributeValue;
  * data-lf-package="streamhub-wall#3.0.0"
  */
 exports.decorate = function (el) {
-    var currentVal = (el.getAttribute(packageAttribute) || '').trim();
+    var currentVal = trim(el.getAttribute(packageAttribute) || '');
     var currentPackageAttrs = currentVal.split(' ');
     var newVal;
     // Add this package attribute value if it's not already there
