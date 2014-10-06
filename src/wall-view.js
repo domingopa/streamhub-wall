@@ -318,8 +318,8 @@ define([
 
         if (typeof(forcedIndex) === 'number') {
             forcedIndex = Math.min(
-                    Math.ceil(forcedIndex / this._columnViews.length),
-                    targetColumnView.views.length);
+                Math.ceil(forcedIndex / this._columnViews.length),
+                targetColumnView.views.length);
         }
         targetColumnView.add(contentView, forcedIndex);
 
@@ -384,7 +384,16 @@ define([
         // .el from the dom
         contentView.remove();
         return ContentListView.prototype.remove.apply(this, arguments);
-    }
+    };
+
+    MediaWallView.prototype.scrollToPermalink = function(contentId) {
+        for (var i = 0; i < this.view.length; i++) {
+            if (this.view[i].content.id === contentId) {
+                view.el.scrollIntoView(true);
+                return;
+            }
+        }
+    }; 
 
     /**
      * Returns a function, that, as long as it continues to be invoked, will not be triggered.
