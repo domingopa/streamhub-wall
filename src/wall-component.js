@@ -178,5 +178,11 @@ WallComponent.prototype.setCollection = function (collection) {
     this._collection = collection;
     this._collection.pipe(this._wallView);
     this._headerView.setCollection(collection);
+
+    var self = this;
+    this._collection.once('_initFromBootstrap', function(){
+        console.log('after bootstrap ', self._collection.id)
+        self._initPermalink();
+    });
 };
 
