@@ -387,9 +387,9 @@ define([
     };
 
     MediaWallView.prototype.scrollToPermalink = function(contentId) {
-        for (var i = 0; i < this.view.length; i++) {
-            if (this.view[i].content.id === contentId) {
-                view.el.scrollIntoView(true);
+        for (var i = 0; i < this.views.length; i++) {
+            if (this.views[i].content.id === contentId) {
+                this.views[i].el.scrollIntoView(true);
                 return;
             }
         }

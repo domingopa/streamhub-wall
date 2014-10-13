@@ -181,7 +181,6 @@ WallComponent.prototype.setCollection = function (collection) {
 
     var self = this;
     this._collection.once('_initFromBootstrap', function(){
-        console.log('after bootstrap ', self._collection.id)
         self._initPermalink();
     });
 };
