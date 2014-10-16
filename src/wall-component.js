@@ -163,7 +163,6 @@ WallComponent.prototype.render = function () {
         view.render();
     });
 
-    this._initPermalink();
     return el;
 };
 
