@@ -13,15 +13,13 @@
 </head>
     <body>
         <button id="auth-button"></button>
-        <div id="auth-log"></div>
         <div id="wall"></div>
 
         <script>
         Livefyre.require(['auth-contrib#0.0.0-pre'], function (authContrib) {
             var auth = Livefyre.auth;
             auth.delegate(auth.createDelegate('http://livefyre.com'));
-            var authLog = authContrib.createLog(auth, document.getElementById('auth-log'));
-            authContrib.createButton(auth, document.getElementById('auth-button'), authLog);
+            authContrib.createButton(auth, document.getElementById('auth-button'));
         });
 
         Livefyre.require([

@@ -43,7 +43,8 @@ describe('A MediaWallComponent', function () {
                 login: function () {}
             });
             var fakeCollection = {
-                pipe: function () {}
+                pipe: function () {},
+                once: function () {}
             };
             var wall = new WallComponent({
                 collection: fakeCollection, // may not always work

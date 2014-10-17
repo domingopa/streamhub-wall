@@ -85,9 +85,10 @@ WallComponent.prototype.setElement = function (el) {
  * @private
  */
 WallComponent.prototype._initPermalink = function() {
-    //If we ever need more than one annotations app on the
-    //same page we can change this.
-    var name = 'media-wall';
+    var name = 'media-wall-' + ('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+    }));
     var msgEvent = window.addEventListener ? 'message' : 'onmessage';
     var addEvent = window.addEventListener || window.attachEvent;
 
@@ -178,9 +179,11 @@ WallComponent.prototype.setCollection = function (collection) {
     this._collection.pipe(this._wallView);
     this._headerView.setCollection(collection);
 
-    var self = this;
-    this._collection.once('_initFromBootstrap', function(){
-        self._initPermalink();
-    });
+    if (!this._collection.id) {
+        var self = this;
+        this._collection.once('_initFromBootstrap', function(){
+            self._initPermalink();
+        });
+    }
 };
 
