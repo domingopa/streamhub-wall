@@ -13,6 +13,7 @@ var mediumTheme = require('streamhub-wall/themes/medium');
 var largeTheme = require('streamhub-wall/themes/large');
 var uuid = require('node-uuid');
 var Collection = require('streamhub-sdk/collection');
+var themableCss = require('text!streamhub-wall/styles/theme.css');
 
 /**
  * LiveMediaWall Component
@@ -112,7 +113,7 @@ WallComponent.prototype._getThemeOpts = function (opts) {
         fontSizeOpts = largeTheme;
     }
 
-    return $.extend(ThemeStyler.getThemeOpts(opts), fontSizeOpts);
+    return $.extend(opts, fontSizeOpts);
 };
 
 /**
@@ -209,6 +210,7 @@ WallComponent.prototype._applyTheme = function (theme) {
     $.extend(this._opts, theme);
 
     this._themeStyler = this._themeStyler || new ThemeStyler({
+        css: themableCss,
         prefix: ['[lf-wall-uuid="',this._uuid,'"] '].join('')
     });
     this._themeStyler.applyTheme(theme);

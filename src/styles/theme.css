@@ -1,0 +1,70 @@
+article.content {
+    background-color: var(--cardBackgroundColor);
+}
+article.content a,
+article.content .content-byline .content-author-name a,
+article.content a.content-author-name {
+    color: var(--linkColor);
+}
+article.content .content-body,
+article.content .content-author-name {
+    color: var(--textColor);
+}
+article.content .content-footer .content-control-list>*:not([class~=hub-btn]),
+article.content .content-footer>*>*:not(.content-control-list),
+article.content .content-created-at a {
+    color: var(--footerTextColor);
+}
+article.content .content-byline .content-author-name a,
+article.content a.content-author-name {
+    color: var(--displayNameColor);
+}
+article.content .content-author-username,
+article.content .content-author-username a {
+    color: var(--usernameColor);
+}
+article.content .content-body {
+    font-family: var(--fontFamily);
+}
+article.content .content-source-logo {
+    color: var(--sourceLogoColor);
+}
+.hub-btn-link,
+.hub-btn-link:hover,
+.hub-btn-link:active {
+    color: var(--buttonTextColor);
+}
+.hub-btn-link:hover {
+    background-color: var(--buttonHoverBackgroundColor);
+}
+.hub-btn-link:active {
+    background-color: var(--buttonActiveBackgroundColor);
+}
+.hub-btn-link:hover,
+.hub-btn-link:active {
+    border-color: var(--buttonBorderColor);
+}
+.content-default .content-body {
+    font-size: var(--bodyFontSize);
+}
+.content-default .content-body {
+    line-height: var(--bodyLineHeight);
+}
+.content-body-title {
+    font-size: var(--titleFontSize);
+}
+.content-body-title {
+    line-height: var(--titleLineHeight);
+}
+.content-default .content-attachments-stacked .content-attachment-link {
+    color: var(--linkAttachmentTextColor);
+}
+.content-default .content-attachments-stacked .content-attachment-link {
+    background-color: var(--linkAttachmentBackgroundColor);
+}
+.content-default .content-attachments-stacked .content-attachment-link:nth-child(1) {
+    border-top: 1px solid var(--linkAttachmentBorderColor);
+}
+.content-default .content-attachments-stacked .content-attachment-link {
+    border-bottom: 1px solid var(--linkAttachmentBorderColor);
+}
