@@ -35,23 +35,11 @@ WallHeaderView.prototype.template = function () { return ''; };
  */
 WallHeaderView.prototype.render = function () {
     View.prototype.render.apply(this, arguments);
-    if ( ! this._postButton) {
+    if ( ! this._postButton || ! this._collection) {
         return;
     }
-    // FIXME: I shouldn't be reaching into private state to get cmd
-    var postCommand = this._postButton._command;
-    if (postCommand.canExecute()) {
-        renderPostButtonIfCollection.call(this, true);
-    } else {
-        postCommand.on('change:canExecute', renderPostButtonIfCollection.bind(this));
-    }
+    renderPostButton.call(this, true);
     this._rendered = true;
-    function renderPostButtonIfCollection(showPostButton) {
-        if (! this._collection) {
-            return;
-        }
-        renderPostButton.call(this, showPostButton);
-    }
 };
 
 function renderPostButton(show) {
