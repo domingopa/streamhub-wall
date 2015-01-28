@@ -3,3 +3,4 @@
 .project
 /.awspublish*
 /dist
+/dev

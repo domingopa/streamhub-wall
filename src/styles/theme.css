@@ -68,3 +68,17 @@ article.content .content-source-logo {
 .content-default .content-attachments-stacked .content-attachment-link {
     border-bottom: 1px solid var(--linkAttachmentBorderColor);
 }
+
+.hub-list-more {
+    background: var(--showMoreBackgroundColor);
+    border-color: var(--showMoreBorderColor);
+    color: var(--showMoreTextColor);
+}
+.hub-list-more:hover {
+    background: var(--showMoreBackgroundColor);
+    border-color: var(--showMoreBorderColor);
+}
+.hub-list-more:active {
+    background: var(--showMoreActiveBackgroundColor);
+    border-color: var(--showMoreActiveBorderColor);
+}

@@ -82,6 +82,25 @@ WallHeaderView.prototype.setCollection = function (collection) {
 };
 
 /**
+ * Get the editor button styles into a format that the button expects.
+ * @param {Object} opts The object that contains the button styles.
+ * @return {Object} The adapted button styles.
+ */
+function getEditorButtonStyles(opts) {
+    return {
+        activeBackgroundColor: opts.postActiveBackgroundColor,
+        activeBorderColor: opts.postActiveBorderColor,
+        activeTextColor: opts.postActiveTextColor,
+        backgroundColor: opts.postBackgroundColor,
+        borderColor: opts.postBorderColor,
+        hoverBackgroundColor: opts.postHoverBackgroundColor,
+        hoverBorderColor: opts.postHoverBorderColor,
+        hoverTextColor: opts.postHoverTextColor,
+        textColor: opts.postTextColor
+    };
+}
+
+/**
  * Create the Button that will let the user post content into the
  * right Collection
  * @param kind - 'content', 'contentWithPhotos', 'photo', true, or falsy
@@ -89,30 +108,25 @@ WallHeaderView.prototype.setCollection = function (collection) {
 WallHeaderView.prototype._createPostButton = function (kind) {
     var mediaEnabled;
     var button;
+    var self = this;
+
     switch (kind) {
         case postButtons.photo:
             button = new UploadButton({
-                modal: createModal()
+                modal: createModal(),
+                stylePrefix: this.opts.stylePrefix,
+                styles: getEditorButtonStyles(this.opts.themeOpts)
             });
             break;
         case postButtons.content:
-            mediaEnabled = false;
-            button = new ContentEditorButton({
-                mediaEnabled: mediaEnabled,
-                modal: createModal(),
-                input: createInput(mediaEnabled)
-            });
+            button = createEditorButton(false);
             break;
         case postButtons.contentWithPhotos:
         case true:
-            mediaEnabled = true;
-            button = new ContentEditorButton({
-                mediaEnabled: mediaEnabled,
-                modal: createModal(),
-                input: createInput(mediaEnabled)
-            });
+            button = createEditorButton(true);
             break;
     }
+
     // Create a Modal that will add the streamhub-wall#vN attribute
     // to its parent when it is shown, so that our css rules can be namespaced
     // nicely
@@ -121,6 +135,20 @@ WallHeaderView.prototype._createPostButton = function (kind) {
         packageAttribute.decorateModal(modal);
         return modal;
     }
+
+    // Create an editor button with or without media enabled. This also grabs
+    // theme options from the opts object provided to this class so the button
+    // can be styled appropriately.
+    function createEditorButton(mediaEnabled) {
+        return new ContentEditorButton({
+            mediaEnabled: mediaEnabled,
+            modal: createModal(),
+            input: createInput(mediaEnabled),
+            stylePrefix: self.opts.stylePrefix,
+            styles: getEditorButtonStyles(self.opts.themeOpts)
+        });
+    }
+
     // Create a custom ContentEditor input whose UploadButton will launch
     // a modal that has the right packageAttribute on its parent
     function createInput(mediaEnabled) {

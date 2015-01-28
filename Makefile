@@ -25,6 +25,6 @@ clean:
 package: build
 
 env=dev
-deploy:
+deploy: dist
 	./node_modules/.bin/lfcdn -e $(env)
 

@@ -8,6 +8,7 @@ var Passthrough = require('stream/passthrough');
 var PostContentButton = require('streamhub-input/javascript/content-editor/button');
 var packageAttribute = require('./package-attribute');
 var ThemeStyler = require('livefyre-theme-styler');
+var TSColors = require('livefyre-theme-styler/colors');
 var smallTheme = require('streamhub-wall/themes/small');
 var mediumTheme = require('streamhub-wall/themes/medium');
 var largeTheme = require('streamhub-wall/themes/large');
@@ -41,6 +42,7 @@ var WallComponent = module.exports = function (opts) {
     opts = this._opts = opts || {};
 
     this._uuid = uuid();
+    this._stylePrefix = ['[lf-wall-uuid="',this._uuid,'"] '].join('');
 
     View.apply(this, arguments);
     // Be a writable that really just proxies to the wallView
@@ -50,6 +52,7 @@ var WallComponent = module.exports = function (opts) {
         this._setCollection(opts.collection);
     }
 
+    this._themeOpts = this._getThemeOpts(opts);
     this._initializeHeaderView(opts);
     this._initializeWallView(opts);
 
@@ -66,40 +69,83 @@ inherits(WallComponent, Passthrough);
 inherits.parasitically(WallComponent, View);
 
 /**
- * Create a WallView and assign to this._wallView.
- * Also pipe this WallComponent's writable side and .more to the WallView's
- * @param opts {object} WallComponent configuration options.
+ * Element prefixes that we want to theme.
+ * @type {Array.<string>}
  */
-WallComponent.prototype._initializeWallView = function (opts) {
-    this._wallView = opts.wallView || new WallView({
-        autoRender: false,
-        minContentWidth: opts.minContentWidth,
-        columns: opts.columns,
-        initial: opts.initial,
-        showMore: opts.showMore,
-        modal: opts.modal,
-        pickColumn: opts.pickColumn
-    });
+var THEMABLE_ELEMENTS = ['post', 'showMore'];
 
-    this._themeOpts = this._getThemeOpts(opts);
-
-    this.pipe(this._wallView);
-    // including more, so that Collection piping works right
-    this.more = new Passthrough();
-    this.more.pipe(this._wallView.more);
+/**
+ * Properties that will have colors generated for them.
+ * @type {Object}
+ */
+var THEMABLE_STYLES = {
+    dark: {
+        activeBackgroundColor: {fn: 'blacken', amt: 5},
+        activeBorderColor: {fn: 'blacken', amt: 20},
+        activeTextColor: {color: '#fff'},
+        backgroundColor: null,
+        borderColor: {fn: 'blacken', amt: 15},
+        hoverBackgroundColor: null,
+        hoverBorderColor: null,
+        hoverTextColor: {color: '#fff'},
+        textColor: {color: '#fff'}
+    },
+    light: {
+        activeBackgroundColor: {fn: 'lighten', amt: 5},
+        activeBorderColor: {fn: 'lighten', amt: 20},
+        activeTextColor: {color: '#000'},
+        backgroundColor: null,
+        borderColor: {fn: 'lighten', amt: 15},
+        hoverBackgroundColor: null,
+        hoverBorderColor: null,
+        hoverTextColor: {color: '#000'},
+        textColor: {color: '#000'}
+    }
 };
 
 /**
- * Create a WallHeaderView and assign to this._headerView.
- * @param opts {object} WallComponent configuration options.
+ * Apply the provided theme argument to the theme css via the theme styler.
+ * @param {Object} theme The themes properties to add.
+ * @private
  */
-WallComponent.prototype._initializeHeaderView = function (opts) {
-    this._headerView = opts.headerView || new WallHeaderView({
-        collection: opts.collection,
-        postButton: opts.postButton
+WallComponent.prototype._applyTheme = function (theme) {
+    $.extend(this._opts, theme);
+
+    this._themeStyler = this._themeStyler || new ThemeStyler({
+        css: themableCss,
+        prefix: this._stylePrefix
     });
+    this._themeStyler.applyTheme(theme);
 };
 
+/**
+ * Configure the theme options. Loops through all the themable elements and
+ * generates colors for them. If the colors are already specified in the opts
+ * argument, they will not be overridden.
+ * @param {Object} opts The theme options to update.
+ * @private
+ */
+function configureThemeOpts(opts) {
+    var prefix;
+    var styles;
+
+    if (!opts.linkColor) {
+        return;
+    }
+
+    for (var i=0; i<THEMABLE_ELEMENTS.length; i++) {
+        prefix = THEMABLE_ELEMENTS[i];
+        styles = TSColors.generateColors(prefix, opts.linkColor, THEMABLE_STYLES);
+        $.extend(opts, $.extend(styles, opts));
+    }
+}
+
+/**
+ * Get and configure the theme options for the app.
+ * @param {Object} opts Config options to use/add to.
+ * @return {Object} The theme options.
+ * @private
+ */
 WallComponent.prototype._getThemeOpts = function (opts) {
     opts = opts || {};
 
@@ -113,21 +159,106 @@ WallComponent.prototype._getThemeOpts = function (opts) {
         fontSizeOpts = largeTheme;
     }
 
-    return $.extend(opts, fontSizeOpts);
+    var theme = $.extend(this._themeOpts || {}, opts);
+    configureThemeOpts(theme);
+
+    return $.extend(opts, theme, fontSizeOpts);
 };
 
 /**
- * Set the HTMLElement that this View renders in
- * @override
- * @param el {HTMLElement}
+ * Create a WallHeaderView and assign to this._headerView.
+ * @param opts {object} WallComponent configuration options.
+ * @private
  */
-WallComponent.prototype.setElement = function (el) {
-    if (this.el) {
-        packageAttribute.undecorate(this.el);
+WallComponent.prototype._initializeHeaderView = function (opts) {
+    this._headerView = opts.headerView || new WallHeaderView({
+        collection: opts.collection,
+        postButton: opts.postButton,
+        stylePrefix: this._stylePrefix,
+        themeOpts: this._themeOpts
+    });
+};
+
+/**
+ * Create a WallView and assign to this._wallView.
+ * Also pipe this WallComponent's writable side and .more to the WallView's
+ * @param opts {object} WallComponent configuration options.
+ * @private
+ */
+WallComponent.prototype._initializeWallView = function (opts) {
+    this._wallView = opts.wallView || new WallView({
+        autoRender: false,
+        minContentWidth: opts.minContentWidth,
+        columns: opts.columns,
+        initial: opts.initial,
+        showMore: opts.showMore,
+        modal: opts.modal,
+        pickColumn: opts.pickColumn
+    });
+
+    this.pipe(this._wallView);
+    // including more, so that Collection piping works right
+    this.more = new Passthrough();
+    this.more.pipe(this._wallView.more);
+};
+
+/**
+ * Given a Collection, return whether it is the same Collection as this
+ * WallComponent is currently using
+ * @param {Object|Collection} collection Collection to compare to.
+ * @private
+ */
+WallComponent.prototype._isSameCollection = function (collection) {
+    var oldCollection = this._collection;
+    return oldCollection && collection
+        && oldCollection.network === collection.network
+        && oldCollection.environment === collection.environment
+        && oldCollection.siteId === collection.siteId
+        && oldCollection.articleId === collection.articleId;
+};
+
+/**
+ * Remove any current theme configuration for this Component, returning
+ * it to default styles.
+ * @private
+ */
+WallComponent.prototype._removeTheme = function () {
+    this._themeStyler.destroy();
+};
+
+/**
+ * Set internal state as to which collection should be shown in this wall.
+ * This will not re-render or recreate subviews. That should be done separately.
+ * @param {collection} The collection to set.
+ * @private
+ */
+WallComponent.prototype._setCollection = function (newCollection) {
+    var oldCollection = this._collection;
+
+    if (oldCollection && typeof oldCollection.unpipe === 'function') {
+        oldCollection.unpipe(this._wallView);
     }
-    View.prototype.setElement.apply(this, arguments);
-    packageAttribute.decorate(this.el);
-    this.el.setAttribute('lf-wall-uuid', this._uuid);
+
+    // If this is not a full streamhub-sdk newCollection object, then make
+    // it one
+    if (newCollection && typeof newCollection.pipe !== 'function') {
+        newCollection = new Collection(newCollection);
+    }
+
+    // Actually set internal state
+    this._collection = newCollection;
+    this._opts.collection = newCollection;
+};
+
+/**
+ * Restore configuration values back to defaults
+ * @private
+ */
+WallComponent.prototype._unconfigure = function () {
+    this._removeTheme();
+    this.configure({
+        collection: null
+    });
 };
 
 /**
@@ -144,6 +275,10 @@ WallComponent.prototype.configure = function (configOpts) {
     if (!configOpts) {
         this._unconfigure();
         return;
+    }
+
+    if (configOpts.linkColor !== this._themeOpts.linkColor) {
+        reconstructHeaderView = true;
     }
 
     this._themeOpts = this._getThemeOpts(configOpts);
@@ -197,31 +332,10 @@ WallComponent.prototype.configure = function (configOpts) {
 };
 
 /**
- * Restore configuration values back to defaults
+ * The entered view callback
  */
-WallComponent.prototype._unconfigure = function () {
-    this._removeTheme();
-    this.configure({
-        collection: null
-    });
-};
-
-WallComponent.prototype._applyTheme = function (theme) {
-    $.extend(this._opts, theme);
-
-    this._themeStyler = this._themeStyler || new ThemeStyler({
-        css: themableCss,
-        prefix: ['[lf-wall-uuid="',this._uuid,'"] '].join('')
-    });
-    this._themeStyler.applyTheme(theme);
-};
-
-/**
- * Remove any current theme configuration for this Component, returning
- * it to default styles.
- */
-WallComponent.prototype._removeTheme = function () {
-    this._themeStyler.destroy();
+WallComponent.prototype.enteredView = function () {
+    this._wallView.relayout();
 };
 
 /**
@@ -272,45 +386,15 @@ WallComponent.prototype.setCollection = function (newCollection) {
 };
 
 /**
- * Set internal state as to which collection should be shown in this wall.
- * This will not re-render or recreate subviews. That should be done separately.
- * @param {collection}
+ * Set the HTMLElement that this View renders in
+ * @override
+ * @param el {HTMLElement}
  */
-WallComponent.prototype._setCollection = function (newCollection) {
-    var oldCollection = this._collection;
-
-    if (oldCollection && typeof oldCollection.unpipe === 'function') {
-        oldCollection.unpipe(this._wallView);
-    };
-
-    // If this is not a full streamhub-sdk newCollection object, then make
-    // it one
-    if (newCollection && typeof newCollection.pipe !== 'function') {
-        newCollection = new Collection(newCollection);
+WallComponent.prototype.setElement = function (el) {
+    if (this.el) {
+        packageAttribute.undecorate(this.el);
     }
-
-    // Actually set internal state
-    this._collection = newCollection;
-    this._opts.collection = newCollection;
-};
-
-/**
- * Given a Collection, return whether it is the same Collection as this
- * WallComponent is currently using
- * @param collection {object|Collection} Collection to compare to.
- */
-WallComponent.prototype._isSameCollection = function (collection) {
-    var oldCollection = this._collection;
-    return oldCollection && collection
-        && oldCollection.network === collection.network
-        && oldCollection.environment === collection.environment
-        && oldCollection.siteId === collection.siteId
-        && oldCollection.articleId === collection.articleId;
-};
-
-/**
- * The entered view callback
- */
-WallComponent.prototype.enteredView = function () {
-    this._wallView.relayout();
+    View.prototype.setElement.apply(this, arguments);
+    packageAttribute.decorate(this.el);
+    this.el.setAttribute('lf-wall-uuid', this._uuid);
 };
