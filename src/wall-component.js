@@ -128,6 +128,7 @@ WallComponent.prototype._applyTheme = function (theme) {
 function configureThemeOpts(opts) {
     var prefix;
     var styles;
+    var _opts = {};
 
     if (!opts.linkColor) {
         return;
@@ -136,8 +137,9 @@ function configureThemeOpts(opts) {
     for (var i=0; i<THEMABLE_ELEMENTS.length; i++) {
         prefix = THEMABLE_ELEMENTS[i];
         styles = TSColors.generateColors(prefix, opts.linkColor, THEMABLE_STYLES);
-        $.extend(opts, $.extend(styles, opts));
+        $.extend(_opts, styles);
     }
+    return _opts;
 }
 
 /**
@@ -151,6 +153,8 @@ WallComponent.prototype._getThemeOpts = function (opts) {
 
     var fontSize = opts.fontSize ? opts.fontSize.toLowerCase() : '';
     var fontSizeOpts = {};
+    var theme;
+
     if (fontSize === 'small') {
         fontSizeOpts = smallTheme;
     } else if (fontSize === 'medium') {
@@ -159,8 +163,8 @@ WallComponent.prototype._getThemeOpts = function (opts) {
         fontSizeOpts = largeTheme;
     }
 
-    var theme = $.extend(this._themeOpts || {}, opts);
-    configureThemeOpts(theme);
+    theme = $.extend(this._themeOpts || {}, opts);
+    theme = $.extend(theme, configureThemeOpts(theme));
 
     return $.extend(opts, theme, fontSizeOpts);
 };

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+</head>
+    <body>
+        <div class="head">
+            <button name="red">Color: Red</button>
+            <button name="black">Color: Black</button>
+            <button name="yellow">Color: Yellow</button>
+            <hr>
+            <button name="lightTheme">Light theme</button>
+            <button name="darkTheme">Dark theme</button>
+        </div>
+        <div>
+            <button id="auth-button">Log in</button>
+        </div>
+        <div id="listView"></div>
+
+        <script src="../../lib/cajon/cajon.js" type="text/javascript"></script>
+        <script src="/requirejs.conf.js" type="text/javascript"></script>
+        <script>
+        requirejs.config({
+            baseUrl: '../../',
+            deps: ['examples/theme-change/theme-change']
+        });
+        </script>
+    </body>
+</html>
