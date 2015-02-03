@@ -163,10 +163,10 @@ WallComponent.prototype._getThemeOpts = function (opts) {
         fontSizeOpts = largeTheme;
     }
 
-    theme = $.extend(this._themeOpts || {}, opts);
+    theme = $.extend({}, this._themeOpts || {}, opts);
     theme = $.extend(theme, configureThemeOpts(theme));
 
-    return $.extend(opts, theme, fontSizeOpts);
+    return $.extend({}, opts, theme, fontSizeOpts);
 };
 
 /**
